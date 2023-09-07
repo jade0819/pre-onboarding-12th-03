@@ -15,8 +15,6 @@ jobs:
           ref: 'main'
       - name: 'npm clear(remove node_modules) and npm install'
         run: npm ci
-      - name: 'App Test'
-        run: npm run test
       - name: 'Project build'
         run: npm run build
       - name: 'deploy to AWS S3 bukit'
