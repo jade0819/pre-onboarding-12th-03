@@ -1,77 +1,52 @@
 import { styled } from 'styled-components';
 import { colors } from '../../constants/colors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useSuggestion from '../../hooks/useSuggestion';
+import useKeyboardNavigation from '../../hooks/useKeyboardNavigation';
+import useDebounce from '../../hooks/useDebounce';
 import SuggestionList from './SuggestionList';
-import SearchInput from './SearchInput';
 import Button from '../ui/Button';
 import { BsXCircleFill } from 'react-icons/bs';
-import { SEARCH_SUGGESTIONS_LENGTH } from '../../constants/suggestion';
-import { koreanRegexCheck } from '../../utils/common';
 
 const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [keyword, setKeyword] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const [state, dispatch, fetchSuggestion] = useSuggestion();
   const { error, datas } = state;
 
-  const maxCount = SEARCH_SUGGESTIONS_LENGTH - 1;
-  const keyboardNavigation = e => {
-    if (!isFocused) return;
+  const [selectedIndex, keyboardNavigation] = useKeyboardNavigation(datas, dispatch, setKeyword);
 
-    switch (e.keyCode) {
-      case 38:
-        if (selectedIndex === 0) setSelectedIndex(maxCount);
-        else setSelectedIndex(prev => prev - 1);
-        break;
-      case 40:
-        if (selectedIndex === maxCount) setSelectedIndex(0);
-        else setSelectedIndex(prev => prev + 1);
-        break;
-      case 13:
-        if (selectedIndex !== -1) setKeyword(datas[selectedIndex].sickNm);
-        break;
-      case 27:
-        dispatch({ type: 'SET_DATA', payload: [] });
-        setSelectedIndex(-1);
-        break;
-      default:
-        break;
-    }
+  useDebounce(keyword, fetchSuggestion);
+
+  const handleKeyEvent = e => {
+    if (!isFocused) return;
+    keyboardNavigation(e.keyCode);
   };
-
-  useEffect(() => {
-    if (!keyword) return;
-    if (!isFocused) return;
-
-    const delayDebounce = setTimeout(() => {
-      if (keyword.length === 0) return;
-
-      if (koreanRegexCheck(keyword)) {
-        fetchSuggestion(keyword);
-      }
-    }, 400);
-
-    return () => clearTimeout(delayDebounce);
-  }, [keyword, isFocused]);
 
   return (
     <SearchWrraper>
       <SearchInner>
         <SearchContainer>
           <SearchInput
-            setIsFocused={setIsFocused}
-            keyword={keyword}
-            searchInputChange={e => setKeyword(e.target.value)}
-            KeyboardNavigation={keyboardNavigation}
+            type="text"
+            value={keyword}
+            onChange={e => setKeyword(e.target.value)}
+            onKeyDown={handleKeyEvent}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="질환명을 입력해주세요."
           />
           {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
         </SearchContainer>
         {isFocused && (
-          <SuggestionList error={error} datas={state.datas} selectedIndex={selectedIndex} />
+          <SuggestionList
+            error={error}
+            datas={datas}
+            keyword={keyword}
+            selectedIndex={selectedIndex}
+          />
         )}
       </SearchInner>
     </SearchWrraper>
@@ -102,6 +77,20 @@ const SearchContainer = styled.div`
   border-radius: 42px;
   background-color: ${colors.white};
   box-sizing: border-box;
+`;
+
+const SearchInput = styled.input`
+  flex-basis: 7;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px 20px;
+  border: none;
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+    border-color: ${colors.white};
+  }
 `;
 
 const KeywordClearBtn = styled(BsXCircleFill)`
