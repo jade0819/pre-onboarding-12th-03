@@ -1,5 +1,5 @@
 import { styled } from 'styled-components';
-import Search from '../components/Search';
+import Search from '../components/search/Search';
 import Image1 from '../assets/images/homepage-img1.svg';
 import Image2 from '../assets/images/homepage-img2.svg';
 import Image3 from '../assets/images/homepage-img3.svg';

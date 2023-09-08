@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SEARCH_SUGGESTIONS_URL } from '../constants/search';
+import { SEARCH_SUGGESTIONS_URL } from '../constants/suggestion';
 
 class HttpClient {
   #baseURL;
