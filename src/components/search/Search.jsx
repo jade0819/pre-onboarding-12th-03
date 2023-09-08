@@ -40,7 +40,14 @@ const Search = () => {
           {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
         </SearchContainer>
-        {isFocused && <SuggestionList error={error} datas={datas} selectedIndex={selectedIndex} />}
+        {isFocused && (
+          <SuggestionList
+            error={error}
+            datas={datas}
+            keyword={keyword}
+            selectedIndex={selectedIndex}
+          />
+        )}
       </SearchInner>
     </SearchWrraper>
   );
