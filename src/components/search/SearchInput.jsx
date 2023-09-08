@@ -1,14 +1,14 @@
 import { styled } from 'styled-components';
 import { colors } from '../../constants/colors';
 
-const SearchInput = ({ setIsFocused, keyword, searchInputChange, KeyboardNavigation }) => {
+const SearchInput = ({ setIsFocused, keyword, onChange, onKeyDown }) => {
   return (
     <>
       <Input
         type="text"
         value={keyword}
-        onChange={searchInputChange}
-        onKeyDown={KeyboardNavigation}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         placeholder="질환명을 입력해주세요."
