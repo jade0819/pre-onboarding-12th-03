@@ -7,6 +7,7 @@ import SearchInput from './SearchInput';
 import Button from '../ui/Button';
 import { BsXCircleFill } from 'react-icons/bs';
 import { SEARCH_SUGGESTIONS_LENGTH } from '../../constants/suggestion';
+import { koreanRegexCheck } from '../../utils/common';
 
 const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -42,9 +43,19 @@ const Search = () => {
 
   useEffect(() => {
     if (!keyword) return;
+    if (!isFocused) return;
 
-    fetchSuggestion(keyword);
-  }, [keyword]);
+    const delayDebounce = setTimeout(() => {
+      if (keyword.length === 0) return;
+
+      if (koreanRegexCheck(keyword)) {
+        dispatch({ type: 'SET_LOADING', payload: true });
+        fetchSuggestion(keyword);
+      }
+    }, 400);
+
+    return () => clearTimeout(delayDebounce);
+  }, [keyword, isFocused]);
 
   if (error) return <p>error!</p>;
   if (isLoading) return <p>검색어 없음</p>;
