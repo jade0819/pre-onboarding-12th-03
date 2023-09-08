@@ -1,8 +1,14 @@
 import { styled } from 'styled-components';
 import { colors } from '../constants/colors';
+import Header from './Header';
 
 const PageLayout = ({ children }) => {
-  return <LayoutContainer>{children}</LayoutContainer>;
+  return (
+    <LayoutContainer>
+      <Header />
+      {children}
+    </LayoutContainer>
+  );
 };
 
 export default PageLayout;
