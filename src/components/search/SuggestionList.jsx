@@ -8,7 +8,7 @@ const SuggestionList = ({ error, datas, keyword, selectedIndex }) => {
       {error && <p>error!</p>}
       {!error && (
         <ul>
-          {isEmptyObject(datas) && <span>검색어 없음</span>}
+          {(!keyword || isEmptyObject(datas)) && <span>검색어 없음</span>}
           {keyword &&
             datas &&
             datas.map((item, index) => {
