@@ -13,8 +13,9 @@ const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
+
   const [state, dispatch, fetchSuggestion] = useSuggestion();
-  const { isLoading, error, datas } = state;
+  const { error, datas } = state;
 
   const maxCount = SEARCH_SUGGESTIONS_LENGTH - 1;
   const keyboardNavigation = e => {
@@ -49,7 +50,6 @@ const Search = () => {
       if (keyword.length === 0) return;
 
       if (koreanRegexCheck(keyword)) {
-        dispatch({ type: 'SET_LOADING', payload: true });
         fetchSuggestion(keyword);
       }
     }, 400);

@@ -1,6 +1,6 @@
-import { CACHE_EXPIRE_TIME } from '../constants/localCache';
+import { CACHE_EXPIRE_TIME } from '../../constants/localCache';
 
-export class localStorage {
+export class localStorageCache {
   #keyName;
 
   constructor() {
@@ -37,5 +37,3 @@ export class localStorage {
     return parsedData.value;
   }
 }
-
-export const localCache = new localStorage();
