@@ -2,23 +2,26 @@ import { styled } from 'styled-components';
 import SuggestionListItem from './SuggestionListItem';
 import { isEmptyObject } from '../../utils/common';
 
-const SuggestionList = ({ datas, selectedIndex }) => {
+const SuggestionList = ({ error, datas, selectedIndex }) => {
   return (
     <ListContainer>
-      <ul>
-        {!datas && <span>검색어 없음</span>}
-        {!isEmptyObject(datas) &&
-          datas.map((item, index) => {
-            return (
-              <SuggestionListItem
-                key={index}
-                data={item}
-                selectedIndex={selectedIndex}
-                index={index}
-              />
-            );
-          })}
-      </ul>
+      {error && <p>error!</p>}
+      {!error && (
+        <ul>
+          {isEmptyObject(datas) && <span>검색어 없음</span>}
+          {datas &&
+            datas.map((item, index) => {
+              return (
+                <SuggestionListItem
+                  key={index}
+                  data={item}
+                  selectedIndex={selectedIndex}
+                  index={index}
+                />
+              );
+            })}
+        </ul>
+      )}
     </ListContainer>
   );
 };

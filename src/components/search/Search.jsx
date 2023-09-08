@@ -57,9 +57,6 @@ const Search = () => {
     return () => clearTimeout(delayDebounce);
   }, [keyword, isFocused]);
 
-  if (error) return <p>error!</p>;
-  if (isLoading) return <p>검색어 없음</p>;
-
   return (
     <SearchWrraper>
       <SearchInner>
@@ -73,7 +70,9 @@ const Search = () => {
           {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
         </SearchContainer>
-        {isFocused && <SuggestionList datas={state.datas} selectedIndex={selectedIndex} />}
+        {isFocused && (
+          <SuggestionList error={error} datas={state.datas} selectedIndex={selectedIndex} />
+        )}
       </SearchInner>
     </SearchWrraper>
   );
