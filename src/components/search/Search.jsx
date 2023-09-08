@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 import { colors } from '../../constants/colors';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useSuggestion from '../../hooks/useSuggestion';
 import SuggestionList from './SuggestionList';
 import SearchInput from './SearchInput';
@@ -8,8 +8,15 @@ import Button from '../ui/Button';
 import { BsXCircleFill } from 'react-icons/bs';
 
 const Search = () => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [keyword, setKeyword] = useState('');
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const [state, dispatch, fetchSuggestion] = useSuggestion();
   const { isLoading, error, datas } = state;
+
+  const KeyboardNavigation = () => {
+    console.log('키보드 이벤트 감지');
+  };
 
   useEffect(() => {
     fetchSuggestion('암');
@@ -22,11 +29,16 @@ const Search = () => {
     <SearchWrraper>
       <SearchInner>
         <SearchContainer>
-          <SearchInput />
-          <KeywordClearBtn />
+          <SearchInput
+            setIsFocused={setIsFocused}
+            keyword={keyword}
+            searchInputChange={e => setKeyword(e.target.value)}
+            KeyboardNavigation={KeyboardNavigation}
+          />
+          {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
         </SearchContainer>
-        <SuggestionList datas={datas} />
+        {isFocused && <SuggestionList datas={state.datas} selectedIndex={selectedIndex} />}
       </SearchInner>
     </SearchWrraper>
   );
