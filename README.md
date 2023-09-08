@@ -1,5 +1,3 @@
-http://preonboarding-frontend-12th-03.s3-website.ap-northeast-2.amazonaws.com/
-
 # 원티드 프리온보딩 프론트엔드 인턴십 3주차 개인 과제
 
 <br>
