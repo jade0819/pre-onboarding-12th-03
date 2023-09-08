@@ -102,9 +102,11 @@ const SearchContainer = styled.div`
   padding: 8px 12px;
   border-radius: 42px;
   background-color: ${colors.white};
+  box-sizing: border-box;
 `;
 
 const KeywordClearBtn = styled(BsXCircleFill)`
+  flex-basis: 1;
   width: 22px;
   height: 22px;
   margin: 0 8px;

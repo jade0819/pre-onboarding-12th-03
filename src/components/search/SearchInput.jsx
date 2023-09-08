@@ -20,11 +20,13 @@ const SearchInput = ({ setIsFocused, keyword, searchInputChange, KeyboardNavigat
 export default SearchInput;
 
 const Input = styled.input`
-  width: 80%;
+  flex-basis: 7;
+  width: 100%;
   font-size: 16px;
   font-weight: 600;
   padding: 4px 20px;
   border: none;
+  box-sizing: border-box;
   &:focus {
     outline: none;
     border-color: ${colors.white};

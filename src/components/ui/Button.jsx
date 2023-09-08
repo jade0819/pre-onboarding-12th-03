@@ -13,6 +13,7 @@ const Button = () => {
 export default Button;
 
 const SearchBtn = styled.button`
+  flex-basis: 1;
   width: 38px;
   height: 38px;
   background-color: ${colors.primary};
