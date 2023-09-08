@@ -1,1 +1,1 @@
-export const CACHE_EXPIRE_TIME = 60;
+export const CACHE_EXPIRE_TIME = 60 * 5;

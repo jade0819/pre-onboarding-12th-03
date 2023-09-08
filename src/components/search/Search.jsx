@@ -1,14 +1,12 @@
 import { styled } from 'styled-components';
 import { colors } from '../../constants/colors';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import useSuggestion from '../../hooks/useSuggestion';
+import useKeyboardNavigation from '../../hooks/useKeyboardNavigation';
+import useDebounce from '../../hooks/useDebounce';
 import SuggestionList from './SuggestionList';
-import SearchInput from './SearchInput';
 import Button from '../ui/Button';
 import { BsXCircleFill } from 'react-icons/bs';
-import { SEARCH_SUGGESTIONS_LENGTH } from '../../constants/suggestion';
-import { koreanRegexCheck } from '../../utils/common';
-import useKeyboardNavigation from '../../hooks/useKeyboardNavigation';
 
 const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -19,34 +17,25 @@ const Search = () => {
 
   const [selectedIndex, keyboardNavigation] = useKeyboardNavigation(datas, dispatch, setKeyword);
 
+  useDebounce(keyword, fetchSuggestion);
+
   const handleKeyEvent = e => {
     if (!isFocused) return;
     keyboardNavigation(e.keyCode);
   };
-
-  useEffect(() => {
-    if (!keyword) return;
-
-    const delayDebounce = setTimeout(() => {
-      if (keyword.length === 0) return;
-
-      if (koreanRegexCheck(keyword)) {
-        fetchSuggestion(keyword);
-      }
-    }, 400);
-
-    return () => clearTimeout(delayDebounce);
-  }, [keyword, isFocused]);
 
   return (
     <SearchWrraper>
       <SearchInner>
         <SearchContainer>
           <SearchInput
-            setIsFocused={setIsFocused}
-            keyword={keyword}
+            type="text"
+            value={keyword}
             onChange={e => setKeyword(e.target.value)}
             onKeyDown={handleKeyEvent}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="질환명을 입력해주세요."
           />
           {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
@@ -81,6 +70,20 @@ const SearchContainer = styled.div`
   border-radius: 42px;
   background-color: ${colors.white};
   box-sizing: border-box;
+`;
+
+const SearchInput = styled.input`
+  flex-basis: 7;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 4px 20px;
+  border: none;
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+    border-color: ${colors.white};
+  }
 `;
 
 const KeywordClearBtn = styled(BsXCircleFill)`
