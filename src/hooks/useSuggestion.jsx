@@ -1,4 +1,4 @@
-import { useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 import { initialState, suggestionReducer } from '../reducer/suggestionReducer';
 import { getSearchSuggestions } from '../api/search';
 import { localStorageCache } from '../api/localCache/localStorage';
@@ -7,7 +7,7 @@ import { SEARCH_SUGGESTIONS_LENGTH } from '../constants/suggestion';
 const useSuggestion = () => {
   const [state, dispatch] = useReducer(suggestionReducer, initialState);
 
-  const fetchSuggestion = async keyword => {
+  const fetchSuggestion = useCallback(async keyword => {
     const localCache = new localStorageCache();
 
     const cacheData = localCache.get(keyword);
@@ -29,7 +29,7 @@ const useSuggestion = () => {
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
-  };
+  }, []);
 
   return [state, dispatch, fetchSuggestion];
 };
