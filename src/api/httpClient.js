@@ -8,7 +8,7 @@ class HttpClient {
     this.#baseURL = baseURL;
   }
 
-  searchSuggestions(url, options = {}) {
+  fetch(url, options = {}) {
     return axios.get(this.#baseURL + url, {
       ...options,
       headers: {
