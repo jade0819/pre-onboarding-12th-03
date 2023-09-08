@@ -6,6 +6,7 @@ import SuggestionList from './SuggestionList';
 import SearchInput from './SearchInput';
 import Button from '../ui/Button';
 import { BsXCircleFill } from 'react-icons/bs';
+import { SEARCH_SUGGESTIONS_LENGTH } from '../../constants/suggestion';
 
 const Search = () => {
   const [isFocused, setIsFocused] = useState(false);
@@ -14,13 +15,36 @@ const Search = () => {
   const [state, dispatch, fetchSuggestion] = useSuggestion();
   const { isLoading, error, datas } = state;
 
-  const KeyboardNavigation = () => {
-    console.log('키보드 이벤트 감지');
+  const maxCount = SEARCH_SUGGESTIONS_LENGTH - 1;
+  const keyboardNavigation = e => {
+    if (!isFocused) return;
+
+    switch (e.keyCode) {
+      case 38:
+        if (selectedIndex === 0) setSelectedIndex(maxCount);
+        else setSelectedIndex(prev => prev - 1);
+        break;
+      case 40:
+        if (selectedIndex === maxCount) setSelectedIndex(0);
+        else setSelectedIndex(prev => prev + 1);
+        break;
+      case 13:
+        if (selectedIndex !== -1) setKeyword(datas[selectedIndex].sickNm);
+        break;
+      case 27:
+        dispatch({ type: 'SET_DATA', payload: [] });
+        setSelectedIndex(-1);
+        break;
+      default:
+        break;
+    }
   };
 
   useEffect(() => {
-    fetchSuggestion('암');
-  }, []);
+    if (!keyword) return;
+
+    fetchSuggestion(keyword);
+  }, [keyword]);
 
   if (error) return <p>error!</p>;
   if (isLoading) return <p>검색어 없음</p>;
@@ -33,7 +57,7 @@ const Search = () => {
             setIsFocused={setIsFocused}
             keyword={keyword}
             searchInputChange={e => setKeyword(e.target.value)}
-            KeyboardNavigation={KeyboardNavigation}
+            KeyboardNavigation={keyboardNavigation}
           />
           {keyword && <KeywordClearBtn onClick={() => setKeyword('')} />}
           <Button />
